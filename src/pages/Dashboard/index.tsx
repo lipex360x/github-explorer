@@ -1,7 +1,8 @@
 import React from 'react'
+import * as S from './styles'
 
 const Dashboard = () => {
-  return <h1>Dashboard</h1>
+  return <S.Title>Github Explorer</S.Title>
 }
 
 export default Dashboard
