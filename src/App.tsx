@@ -11,7 +11,6 @@ const App = () => (
     </BrowserRouter>
     <GlobalStyle />
   </>
-
 )
 
 export default App
