@@ -17,23 +17,35 @@ interface RepositoryProps {
 
 const Dashboard = () => {
   const [repositories, setRepositories] = useState<RepositoryProps[]>([])
+  const [inputError, setInputError] = useState('')
   const [newRepo, setNewRepo] = useState('')
 
   async function handleAddRepository (event:FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
-    const response = await api.get<RepositoryProps>(`repos/${newRepo}`)
+    try {
+      if (!newRepo) {
+        setInputError('Please, enter an author/repository name')
+        return
+      }
 
-    const repository = response.data
+      const response = await api.get<RepositoryProps>(`repos/${newRepo}`)
 
-    setRepositories([...repositories, repository])
-    setNewRepo('')
+      const repository = response.data
+
+      setRepositories([...repositories, repository])
+      setNewRepo('')
+      setInputError('')
+    } catch (error) {
+      setInputError('This search returned an error')
+    }
   }
 
   return (
     <>
       <img src={logo} alt="" srcSet=""/>
       <S.Title>Explorer on GitHub</S.Title>
-      <S.Form onSubmit={handleAddRepository}>
+
+      <S.Form hasError={!!inputError} onSubmit={handleAddRepository}>
 
         <input
           placeholder="Insert the repository name"
@@ -43,6 +55,8 @@ const Dashboard = () => {
 
         <button>Search</button>
       </S.Form>
+
+      { inputError && <S.Error>{inputError}</S.Error> }
 
       <S.Repositories>
         {repositories.map(repository => (
